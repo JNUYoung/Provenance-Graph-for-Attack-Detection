@@ -51,3 +51,61 @@ Recording Papers and Notes about ***Threat Detection based on System Provenance 
 2. 用什么数据、什么结构准确地表示一个具体的威胁行为：不同的表示方式都有其优点和缺点；例如常用的恶意IP、恶意文件的hash、几乎没有鲁棒性可言，但却是现实中最常用的安全工具；其它常见方式包括系统调用序列、API调用树、代码动态执行图等。一般来说，简单的结构意味着更高的效率，但表达能力更差，误报的概率更高；而复杂的结构，表达能力更好的同时检测效率则更低；
 3. 如何设计检测算法权衡威胁检测的响应速度与检测精度矛盾；
 4. 如何设计存储系统以权衡存储空间与查询效率之间的矛盾；
+
+
+
+## 入侵检测数据集
+
+**1.Intrusion Detection Evaluation Dataset-CIC-IDS2017**
+
+数据下载链接：https://www.unb.ca/cic/datasets/ids-2017.html
+
+数据集描述：数据集包含良性事件以及大部分的常见的攻击事件，包含了经过CICFlowMeter处理之后的带标签的流量数据，通过CSV文件的形式进行展示，包括时间戳、源IP、目的IP、源端口、目的端口、协议以及攻击等；
+
+**2.DARPA TC数据集**
+
+DARPA Transparent Computing Program
+
+**3.LANL数据集**
+
+- auth.txt：包含了主机之间的验证事件
+
+  time, source user@domain, destination user@domain, source computer, destination computer, authentication type, logon type, authentication orientation, success/failure
+
+- dns.txt：包含了主机向DNS服务器的请求事件
+  time, source computer, computer resolved
+
+- flows.txt：包含了主机之间的发送的网络流
+  time, duration, source computer, source port, destination computer, destination port, protocol, packet count, byte count
+
+**4.CICDarknet2020**
+
+包含正常流量数据和暗网流量数据；
+
+Audio-Stream、Browsing、Chat、Email、P2P、Transfer、Video-Stream、VOIP
+
+**5.UNSW-NB15 **
+
+包含了正常系统和网络行为，以及人为模拟的攻击行为，包含Fuzzers,    Analysis,    Backdoors,    DoS,    Exploits,    Generic, Reconnaissance,  Shellcode  and  Worms九类不同的攻击方式。
+
+**6.CSE-CIC-IDS2018**
+
+- 数据集包括七种不同的攻击场景，Brute-force、Heartbleed、Botnet、DoS、DDoS、Web attacks、infiltration of network from inside；
+- 攻击者基础设施：50台服务器；
+- 受害组织：5个部门、420台主机、30台服务器；
+- 数据集包括捕获的每台机器的网络流量和系统日志，使用CICFlowMeter-V3从捕获流量中提取了80个特征；
+
+![image-20220720210436831](C:\Users\YOUNG\AppData\Roaming\Typora\typora-user-images\image-20220720210436831.png)
+
+- 下载主机间的流量记录的CSV文件；
+- 原始的主机间的PCAP数据包和系统日志；
+
+> 下载指南：
+>
+> 1. 安装AWS CLI
+>
+> 2. cmd 命令获取数据集列表：aws s3 ls --no-sign-request "s3://cse-cic-ids2018" --recursive --human-readable --summarize；
+>
+> 3. 下载某个特定文件：
+>
+>    aws s3 cp --no-sign-request "s3://cse-cic-ids2018/Processed Traffic Data for ML Algorithms/Wednesday-14-02-2018_TrafficForML_CICFlowMeter.csv" F:数据集/CICIDS2018/Wednesday-14-02-2018_TrafficForML_CICFlowMeter.csv
