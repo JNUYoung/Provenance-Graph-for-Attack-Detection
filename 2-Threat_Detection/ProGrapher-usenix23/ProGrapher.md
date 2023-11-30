@@ -1,6 +1,6 @@
 # ProGrapher：An Anomaly Detection System based on Provenance Graph Embedding
 
-> paper link：https://www.usenix.org/conference/usenixsecurity23/presentation/yang-fan
+> 论文链接：https://www.usenix.org/conference/usenixsecurity23/presentation/yang-fan
 
 ## abstract
 
@@ -52,7 +52,8 @@
 
 ### 2.3 graph embedding
 
-
+- Node embedding: DeepWalk, GCN, GraphSAGE
+- Whole Graph Embedding: DiffPool, graph2vec, graph sketching
 
 
 
@@ -80,7 +81,7 @@ goals：
 
 
 
-【**总览**】基于审计日志按照时序进行划分和构建溯源图 -> 对各个子图进行embedding，学习正常状态下的图特征 -> 检测出可能包含异常行为的子图 -> 基于检测出的子图再进行更细粒度的节点级的检测
+【overview】基于审计日志按照时序进行划分和构建溯源图 -> 对各个子图进行embedding，学习正常状态下的图特征 -> 检测出可能包含异常行为的子图 -> 基于检测出的子图再进行更细粒度的节点级的检测
 
 
 
@@ -162,7 +163,7 @@ prographer主要关注连续的图快照之间的变化，将其作为一个重�
 
 ### 4.4 key indicator generator
 
-
+对于一张图快照s，比较其每个RSG，经过encoder后得到的embedding以及由前k个图序列预测得到的embedding之间的差值，并按照降序进行排序，前k个差异最大的RSG判断为攻击活动相关的节点和边。
 
 
 
@@ -179,11 +180,15 @@ prographer主要关注连续的图快照之间的变化，将其作为一个重�
 
 ## 6 evaluation
 
+### 6.2 effectiveness
+
+![image-20231107161439588](C:\Users\YOUNG\AppData\Roaming\Typora\typora-user-images\image-20231107161439588.png)
+
 ### 6.6 robustness
 
-攻击者在进行攻击活动时，例如apt攻击，通常会同时进行大量的正常网络行为和系统操作，通过大量的攻击无关行为来掩盖其真正的攻击动作，也被称为mimicry attack；
+攻击者在进行攻击活动时，例如apt攻击，通常会同时模仿大量的正常网络行为和系统操作，通过模仿大量的系统正常行为来掩盖其真正的攻击动作，也被称为mimicry attack；
 
-本文对于测试集中的每个攻击相关的系统实体节点，以一定概率随机在插入一些正常的系统事件（边）来模拟攻击者的攻击逃逸行为，从而通过实验验证prographer系统的检测鲁棒性；
+本文对于测试集中的每个攻击相关的系统实体节点，<u>***以一定概率随机在插入一些正常的系统事件***</u>（边）来模拟攻击者的攻击逃逸行为，从而通过实验验证prographer系统的检测鲁棒性；
 
 
 
@@ -197,17 +202,19 @@ prographer主要关注连续的图快照之间的变化，将其作为一个重�
 
 
 
-## 999.comments
+## notes
 
 1. 溯源图的表示学习：本工作将溯源图按照时序进行流式建模，改造graph2vec算法对图快照进行表示学习；
 2. 异常检测方法：本工作考虑溯源图快照之间的差异作为一个检测维度，根据前k个快照的embedding推断出第k+1个快照的embedding，并基于其本身的encoder之后的表示作为参照指标；
-3. 攻击调查方法：由于encoder时采用基于RSG的graph2vec方法，所以可以对每个RSG的共现概率进行排序，避免人工调查；
+3. 攻击调查方法：由于encoder时采用基于RSG的graph2vec方法，所以可以对每个RSG的共现概率进行排序，实现一定程度上的自动化攻击调查方法；
 4. ***problems to solve***：
    - PIDS系统的鲁棒性问题：
      - 如何更全面的模拟攻击者的对抗行为，从而提升系统鲁棒性？
-     - 系统鲁棒性的衡量指标的建设，形成PIDS祥光工作的标准化的量化指标？
+     - 系统鲁棒性的衡量指标的建设，形成PIDS相关工作的标准化的量化指标？
    - 基于异常思想的PIDS系统，由于系统正常行为添加或演化所导致的误报问题：
      - 通常的解决方法是对模型进行重训练，但是一方面重训练的周期无法界定，一方面也会增大开销，需要找到PIDS对于该类问题的有效的解决方法？
+   - 自动化攻击调查：
+     - 本文提出的key indicator generator，也即自动化的攻击相关的行为发现，其对于上游pipeline具有强依赖，高度依赖前置的表示学习和异常检测的质量；
 
 
 
